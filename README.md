@@ -1,31 +1,31 @@
-# 🏃 Human Motion Analysis using 3D Pose Estimation
+# 🏃 3D Human Motion Analysis using Pose Estimation
 
 ## 📌 Overview
 
-This project builds an end-to-end computer vision pipeline to analyze human motion from video using 3D pose estimation. The system extracts skeletal keypoints from video frames and computes biomechanical features such as joint angles, motion symmetry, and joint velocity.
+This project implements an end-to-end computer vision pipeline for analyzing human motion from video using 3D pose estimation. The system extracts skeletal keypoints from video frames and computes biomechanical features such as joint angles, motion symmetry, and joint velocity.
 
-The goal is to simulate real-world motion analysis systems used in sports performance and biomechanics, where understanding movement patterns is critical for performance optimization and injury prevention.
+The pipeline is designed to simulate real-world motion analysis systems used in sports performance and biomechanics, where raw video is transformed into structured motion signals for downstream analysis.
 
 ---
 
 ## 🎯 Motivation
 
-Modern sports analytics systems rely heavily on computer vision to track and analyze athlete movements. However, real-world data is often noisy, occluded, and captured in unconstrained environments.
+Modern sports analytics systems rely on computer vision and machine learning to analyze athlete movements at scale. However, real-world data is often noisy, occluded, and captured in unconstrained environments.
 
 This project demonstrates how to:
 
-* Extract structured motion data from raw video
-* Handle noisy pose detections
+* Extract structured pose data from raw video
+* Handle noisy and imperfect pose detections
 * Compute meaningful biomechanical features
-* Analyze motion patterns over time
+* Analyze human motion over time
 
 ---
 
 ## ⚙️ Tech Stack
 
 * **Python**
+* **MediaPipe** – 3D human pose estimation (33 landmarks)
 * **OpenCV** – video processing
-* **MediaPipe** – 3D pose estimation (33 keypoints)
 * **NumPy** – numerical computations
 * **Matplotlib** – visualization
 
@@ -35,104 +35,142 @@ This project demonstrates how to:
 
 ### 1. Video Processing
 
-* Input video is processed frame-by-frame
-* Frames are converted to RGB and passed to MediaPipe Pose
+* Input video is processed frame-by-frame using OpenCV
+* Frames are converted to RGB and passed to MediaPipe
 
 ### 2. Pose Estimation
 
-* Extract 33 body landmarks per frame (x, y, z)
-* Landmarks represent key joints such as hips, knees, ankles, and shoulders
+* Extracts 33 body landmarks per frame (x, y, z coordinates)
+* Tracks key joints including hips, knees, ankles, and shoulders
 
 ### 3. Feature Extraction
 
 #### 🔹 Knee Joint Angles
 
-* Computed using three points: hip → knee → ankle
+* Computed using three keypoints: **hip → knee → ankle**
 * Calculated for both left and right legs
 
 #### 🔹 Motion Symmetry
 
 * Absolute difference between left and right knee angles
-* Used to detect imbalance in movement
+* Helps identify imbalance in movement patterns
 
 #### 🔹 Joint Velocity
 
-* Temporal change in joint positions across frames
-* Used to estimate motion dynamics
+* Computed from temporal changes in joint positions
+* Captures motion dynamics and speed
 
 ### 4. Noise Handling
 
 * Applied moving average smoothing to reduce jitter in pose signals
-* Improved stability of biomechanical measurements
+* Improves stability and interpretability of motion features
 
 ---
 
-## 📊 Results
+## 📊 Outputs
 
-* Successfully extracted consistent pose landmarks from real-world videos
-* Generated time-series plots for:
+The pipeline generates:
 
-  * Left & right knee angles
-  * Smoothed motion curves
-  * Symmetry analysis
-  * Joint velocity
-* Demonstrated robustness under moderate occlusion and background noise
+* Raw knee angle signals (left & right)
+* Smoothed knee angle signals
+* Symmetry analysis over time
+* Joint velocity plots
 
----
-
-## ⚠️ Challenges & Learnings
-
-* Pose estimation accuracy degrades under occlusion and camera angle variation
-* Multi-person scenes can lead to unstable tracking
-* Raw pose outputs are noisy and require smoothing
-* Data quality significantly impacts downstream analysis
-
----
-
-## 🚀 Future Improvements
-
-* Multi-person tracking and identity consistency
-* Action classification (walk vs run vs jump)
-* Real-time inference pipeline
-* Integration with deep learning models for performance scoring
-* Deployment for edge/mobile devices
-
----
-
-## 🧪 How to Run
-
-```bash
-git clone https://github.com/your-username/human-motion-analysis.git
-cd human-motion-analysis
-pip install -r requirements.txt
-```
-
-Run the main notebook/script to process a sample video and generate plots.
+All outputs are generated programmatically and can be saved locally.
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 human-motion-analysis/
+├── src/
+│   ├── main.py              # Entry point for the pipeline
+│   ├── pose_extraction.py  # Video → pose keypoints
+│   ├── biomechanics.py     # Feature extraction (angles, velocity, symmetry)
+│   └── utils.py            # Plotting and utility functions
 │
-├── data/           
-├── outputs/            
-├── src/                 
-├── notebooks/        
+├── data/                   # Input videos (not tracked in repo)
+├── outputs/                # Generated plots (optional)
+│
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 💡 Key Takeaway
+## 🚀 How to Run
 
-This project demonstrates how raw video can be transformed into structured motion data and actionable biomechanical insights using computer vision techniques.
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Add your video
+
+Place a test video inside the `data/` folder:
+
+```text
+data/sample_video.mp4
+```
+
+### 3. Run the pipeline
+
+```bash
+python src/main.py
+```
 
 ---
 
-## 🔗 Author
+## 🧪 Example Pipeline
 
-Sameer Saxena
-[GitHub](https://github.com/Sampai28)
+```text
+Video → Pose Estimation → Keypoint Extraction → Feature Computation → Motion Analysis
+```
+
+---
+
+## ⚠️ Challenges & Learnings
+
+* Pose estimation accuracy degrades under occlusion and non-standard camera angles
+* Multi-person scenes can introduce tracking instability
+* Raw pose outputs are noisy and require smoothing
+* Data quality significantly impacts downstream analysis
+
+---
+
+## 🔍 Key Insights
+
+* Human motion can be represented as time-series data derived from pose landmarks
+* Even simple geometric features (angles, velocity) can provide meaningful motion insights
+* Robust pipelines must handle imperfect real-world data
+
+---
+
+## 🚀 Future Improvements
+
+* Action classification (walk vs run vs jump)
+* Multi-person tracking and identity consistency
+* Real-time inference pipeline
+* Integration with deep learning models for performance scoring
+* Export of structured features to CSV for downstream ML tasks
+
+---
+
+## 💡 Relevance
+
+This project demonstrates core skills in:
+
+* Computer vision pipelines
+* Human pose estimation
+* Time-series feature extraction
+* Motion and biomechanics analysis
+
+These are directly applicable to real-world applications in:
+
+* Sports analytics
+* Athlete performance tracking
+* Movement analysis systems
+
+---
